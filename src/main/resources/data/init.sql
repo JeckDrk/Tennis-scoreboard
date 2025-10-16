@@ -1,0 +1,28 @@
+INSERT into Players (name) values ('L. KIVIC');
+INSERT into Players (name) values ('K. LAMPOT');
+INSERT into Players (name) values ('J. PORROT');
+INSERT into Players (name) values ('G. GRIMBER');
+INSERT into Players (name) values ('K. KUBERT');
+INSERT into Players (name) values ('S. SAFIN');
+INSERT into Players (name) values ('I. BORG');
+INSERT into Players (name) values ('O. PORIS');
+INSERT into Players (name) values ('A. GETIRM');
+INSERT into Players (name) values ('S. POKOR');
+
+INSERT into Matches (player1, player2, winner) values (1, 10, 10);
+INSERT into Matches (player1, player2, winner) values (2, 9, 2);
+INSERT into Matches (player1, player2, winner) values (3, 8, 8);
+INSERT into Matches (player1, player2, winner) values (4, 7, 4);
+INSERT into Matches (player1, player2, winner) values (5, 6, 6);
+INSERT into Matches (player1, player2, winner) values (6, 5, 5);
+INSERT into Matches (player1, player2, winner) values (7, 4, 4);
+INSERT into Matches (player1, player2, winner) values (8, 3, 3);
+INSERT into Matches (player1, player2, winner) values (9, 2, 2);
+INSERT into Matches (player1, player2, winner) values (10, 1, 1);
+INSERT into Matches (player1, player2, winner) values (10, 2, 10);
+INSERT into Matches (player1, player2, winner) values (10, 3, 3);
+INSERT into Matches (player1, player2, winner) values (10, 4, 10);
+INSERT into Matches (player1, player2, winner) values (10, 5, 5);
+INSERT into Matches (player1, player2, winner) values (10, 6, 10);
+INSERT into Matches (player1, player2, winner) values (9, 4, 4);
+INSERT into Matches (player1, player2, winner) values (8, 5, 5);
