@@ -1,7 +1,7 @@
 package TennisScoreboard.controller.servlet;
 
-import TennisScoreboard.entity.MatchEntity;
-import TennisScoreboard.entity.SearchDTO;
+import TennisScoreboard.model.MatchEntity;
+import TennisScoreboard.dto.SearchDTO;
 import TennisScoreboard.sevice.PagesMatchesService;
 import TennisScoreboard.sevice.SearchForNameService;
 import jakarta.servlet.ServletConfig;

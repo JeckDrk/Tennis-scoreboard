@@ -1,14 +1,10 @@
 package TennisScoreboard.controller.servlet;
 
-import TennisScoreboard.entity.MatchScoreDTO;
+import TennisScoreboard.dto.MatchScoreDTO;
 import TennisScoreboard.exception.InputException;
-import TennisScoreboard.model.MatchScorePersistence;
-import TennisScoreboard.model.PlayerPersistence;
-import TennisScoreboard.model.MatchesStorage;
-import TennisScoreboard.model.PlayerStorage;
 import TennisScoreboard.sevice.OngoingMatchesService;
 import TennisScoreboard.sevice.PrepareMatchScore;
-import TennisScoreboard.validators.InputValidator;
+import TennisScoreboard.util.InputValidator;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -55,6 +51,4 @@ public class NewMatchServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getRequestDispatcher("/WEB-INF/view/new-match.jsp").forward(request, response);
     }
-
-
 }

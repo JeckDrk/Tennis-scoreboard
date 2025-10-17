@@ -1,5 +1,6 @@
 package TennisScoreboard.controller.servlet;
 
+import TennisScoreboard.exception.ApplicationException;
 import TennisScoreboard.exception.InputException;
 import jakarta.servlet.*;
 import jakarta.servlet.Filter;
@@ -24,7 +25,7 @@ public class ErrorFilter implements jakarta.servlet.Filter {
 
         try {
             filterChain.doFilter(servletRequest, servletResponse);
-        } catch (InputException e) {
+        } catch (ApplicationException e) {
             response.sendRedirect(request.getContextPath() + "/");
         } catch (Exception e) {
             throw new RuntimeException(e);

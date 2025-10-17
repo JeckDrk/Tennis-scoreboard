@@ -1,16 +1,16 @@
 package TennisScoreboard.sevice;
 
-import TennisScoreboard.entity.MatchEntity;
-import TennisScoreboard.entity.SearchDTO;
-import TennisScoreboard.model.MatchesStorage;
+import TennisScoreboard.dao.PaginatedSearchStorage;
+import TennisScoreboard.model.MatchEntity;
+import TennisScoreboard.dto.SearchDTO;
 
 import java.util.List;
 
 public class PagesMatchesService {
 
-    private final MatchesStorage matchStorage;
+    private final PaginatedSearchStorage<MatchEntity> matchStorage;
 
-    public PagesMatchesService(MatchesStorage matchStorage) {
+    public PagesMatchesService(PaginatedSearchStorage<MatchEntity> matchStorage) {
         this.matchStorage = matchStorage;
     }
 

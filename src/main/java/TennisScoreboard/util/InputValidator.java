@@ -1,4 +1,4 @@
-package TennisScoreboard.validators;
+package TennisScoreboard.util;
 
 import TennisScoreboard.exception.InputException;
 

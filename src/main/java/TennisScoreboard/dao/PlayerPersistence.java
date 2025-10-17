@@ -1,24 +1,18 @@
-package TennisScoreboard.model;
+package TennisScoreboard.dao;
 
 
-import TennisScoreboard.entity.PlayerEntity;
+import TennisScoreboard.model.PlayerEntity;
 import TennisScoreboard.exception.UniqueException;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import TennisScoreboard.util.utilPersistence;
+import TennisScoreboard.util.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
 
-import java.util.List;
+public class PlayerPersistence implements PersistenceStorage<PlayerEntity> {
 
-public class PlayerPersistence implements PlayerStorage {
-
-    protected static final SessionFactory SESSION_FACTORY = utilPersistence.getSessionFactory();
-
-    private final int ENTITY_ON_PAGE = 4;
+    protected static final org.hibernate.SessionFactory SESSION_FACTORY = SessionFactory.getSessionFactory();
 
     @Override
-    public PlayerEntity get(String name) {
+    public PlayerEntity get(Object name) {
         try (Session session = SESSION_FACTORY.openSession()) {
             session.beginTransaction();
             PlayerEntity player = session.createQuery("from PlayerEntity where name = :name", PlayerEntity.class)

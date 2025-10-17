@@ -1,18 +1,18 @@
-package TennisScoreboard.model;
+package TennisScoreboard.dao;
 
-import TennisScoreboard.entity.MatchEntity;
+import TennisScoreboard.exception.ApplicationException;
+import TennisScoreboard.model.MatchEntity;
 import TennisScoreboard.exception.UniqueException;
-import TennisScoreboard.util.utilPersistence;
+import TennisScoreboard.util.SessionFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
 
 import java.util.List;
 
-public class MatchScorePersistence implements MatchesStorage {
+public class MatchScorePersistence implements PersistenceStorage<MatchEntity>, PaginatedSearchStorage {
 
-    protected static final SessionFactory SESSION_FACTORY = utilPersistence.getSessionFactory();
+    protected static final org.hibernate.SessionFactory SESSION_FACTORY = SessionFactory.getSessionFactory();
 
     @Override
     public List<MatchEntity> getPaginated(int page, int pageSize) {
@@ -24,8 +24,8 @@ public class MatchScorePersistence implements MatchesStorage {
                     .setParameter("first", firstEntityOnPage)
                     .setParameter("last", lastEntityOnPage)
                     .getResultList();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (HibernateException e) {
+            throw new ApplicationException(e.getMessage());
         }
     }
 
@@ -35,7 +35,7 @@ public class MatchScorePersistence implements MatchesStorage {
             session.beginTransaction();
             return session.createQuery("select count(m) from MatchEntity m", long.class).uniqueResult();
         } catch (HibernateException e) {
-            throw new RuntimeException(e);
+            throw new ApplicationException(e.getMessage());
         }
     }
 
@@ -51,8 +51,8 @@ public class MatchScorePersistence implements MatchesStorage {
                     .setFirstResult(firstEntityOnPage)
                     .setMaxResults(pageSize)
                     .getResultList();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (HibernateException e) {
+            throw new ApplicationException(e.getMessage());
         }
     }
 
@@ -65,7 +65,7 @@ public class MatchScorePersistence implements MatchesStorage {
                     .setParameter("search", "%" + search.toLowerCase() + "%")
                     .uniqueResult();
         } catch (HibernateException e) {
-            throw new RuntimeException(e);
+            throw new ApplicationException(e.getMessage());
         }
     }
 
@@ -81,8 +81,19 @@ public class MatchScorePersistence implements MatchesStorage {
             if ("PUBLIC.CONSTRAINT_INDEX_D".equals(e.getConstraintName())) {
                 throw new UniqueException("Match already exists!");
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (HibernateException e) {
+            throw new ApplicationException(e.getMessage());
+        }
+    }
+
+    @Override
+    public MatchEntity get(Object object) {
+        int id = Integer.parseInt((String) object);
+        try (Session session = SESSION_FACTORY.openSession()) {
+            session.beginTransaction();
+            return session.getReference(MatchEntity.class, id);
+        } catch (HibernateException e) {
+            throw new ApplicationException(e.getMessage());
         }
     }
 }

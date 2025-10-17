@@ -1,14 +1,13 @@
 package TennisScoreboard.sevice;
 
-import TennisScoreboard.entity.MatchScoreDTO;
+import TennisScoreboard.dto.MatchScoreDTO;
 
 import static java.lang.Math.abs;
 
 public class MatchScoreCalculationService {
 
-    public MatchScoreCalculationService(MatchScoreDTO matchScoreDTO, int player) {
-        this.matchScoreDTO = matchScoreDTO;
-        this.player = player;
+    public MatchScoreCalculationService(MatchScoreDTO MATCH_SCORE) {
+        this.MATCH_SCORE = MATCH_SCORE;
     }
 
     private static final int ZERO_POINT = 0;
@@ -22,14 +21,23 @@ public class MatchScoreCalculationService {
 
     private static final int DIFFERENCE = 2;
 
-    private final MatchScoreDTO matchScoreDTO;
-    private final int player;
+    private final MatchScoreDTO MATCH_SCORE;
 
-    public void calculate() {
+    private int player;
+
+    public void newPointForPlayer(int player) {
+        if (MATCH_SCORE.isFinished()) {
+            return;
+        } else if (isFinished()) {
+            finishMatch();
+        }
+
+        this.player = player;
+
         if (isTaiBreak()) {
             addPointTaiBreak();
 
-            if(isFinishedTaiBreak()){
+            if (isFinishedTaiBreak()) {
                 dropPoint();
             }
         } else if (isAdvantage()) {
@@ -48,75 +56,70 @@ public class MatchScoreCalculationService {
                 dropGame();
                 addSet();
 
-                if (isFinished()){
-                    if (player == 1){
-                        matchScoreDTO.setWinner(matchScoreDTO.getPlayerName1());
-                    } else {
-                        matchScoreDTO.setWinner(matchScoreDTO.getPlayerName2());
-                    }
-                    matchScoreDTO.setFinished(true);
+                if (isFinished()) {
+                    finishMatch();
                 }
             }
         }
     }
 
     private boolean isTaiBreak() {
-        return abs(matchScoreDTO.getGame1() - matchScoreDTO.getGame2()) < DIFFERENCE &&
-                matchScoreDTO.getGame1() >= MAX_GAME && matchScoreDTO.getGame2() >= MAX_GAME;
+        return abs(MATCH_SCORE.getGame1() - MATCH_SCORE.getGame2()) < DIFFERENCE &&
+                MATCH_SCORE.getGame1() >= MAX_GAME && MATCH_SCORE.getGame2() >= MAX_GAME;
     }
 
     private void addPointTaiBreak() {
         if (player == 1) {
-            matchScoreDTO.setPoint1(matchScoreDTO.getPoint1() + 1);
+            MATCH_SCORE.setPoint1(MATCH_SCORE.getPoint1() + 1);
         } else {
-            matchScoreDTO.setPoint2(matchScoreDTO.getPoint2() + 1);
+            MATCH_SCORE.setPoint2(MATCH_SCORE.getPoint2() + 1);
         }
     }
 
     private boolean isFinishedTaiBreak() {
-        return abs(matchScoreDTO.getPoint1() - matchScoreDTO.getPoint2()) >= DIFFERENCE &&
-                (matchScoreDTO.getPoint1() >= MAX_POINT_SCORE || matchScoreDTO.getPoint2() >= MAX_POINT_SCORE);
+        return abs(MATCH_SCORE.getPoint1() - MATCH_SCORE.getPoint2()) >= DIFFERENCE &&
+                (MATCH_SCORE.getPoint1() >= MAX_POINT_SCORE || MATCH_SCORE.getPoint2() >= MAX_POINT_SCORE);
     }
 
     private boolean isDeuce() {
-        return (!matchScoreDTO.isAd1() && !matchScoreDTO.isAd2() &&
-                (matchScoreDTO.getPoint1() == THIRD_POINT && matchScoreDTO.getPoint2() == THIRD_POINT));
+        return (!MATCH_SCORE.isAd1() && !MATCH_SCORE.isAd2() &&
+                (MATCH_SCORE.getPoint1() == THIRD_POINT && MATCH_SCORE.getPoint2() == THIRD_POINT));
     }
 
     private void doDeuce() {
         if (player == 1) {
-            matchScoreDTO.setAd1(true);
+            MATCH_SCORE.setAd1(true);
         } else {
-            matchScoreDTO.setAd2(true);
+            MATCH_SCORE.setAd2(true);
         }
     }
 
     private boolean isAdvantage() {
-        return matchScoreDTO.isAd1() || matchScoreDTO.isAd2();
+        return MATCH_SCORE.isAd1() || MATCH_SCORE.isAd2();
     }
 
     private void doAdvantage() {
-        if ((matchScoreDTO.isAd1() && player == 1) ||
-                (matchScoreDTO.isAd2() && player == 2)) {
-            matchScoreDTO.setPoint1(0);
-            matchScoreDTO.setPoint2(0);
+        if ((MATCH_SCORE.isAd1() && player == 1) ||
+                (MATCH_SCORE.isAd2() && player == 2)) {
+            MATCH_SCORE.setPoint1(0);
+            MATCH_SCORE.setPoint2(0);
         } else {
-            matchScoreDTO.setPoint1(40);
-            matchScoreDTO.setPoint2(40);
+            MATCH_SCORE.setPoint1(40);
+            MATCH_SCORE.setPoint2(40);
         }
-        matchScoreDTO.setAd1(false);
-        matchScoreDTO.setAd2(false);
+        MATCH_SCORE.setAd1(false);
+        MATCH_SCORE.setAd2(false);
     }
 
     private void addPoint() {
         if (player == 1) {
-            matchScoreDTO.setPoint1(newPoint(matchScoreDTO.getPoint1()));
+            MATCH_SCORE.setPoint1(setNewPoint(MATCH_SCORE.getPoint1()));
         } else {
-            matchScoreDTO.setPoint2(newPoint(matchScoreDTO.getPoint2()));
+            MATCH_SCORE.setPoint2(setNewPoint(MATCH_SCORE.getPoint2()));
         }
     }
 
-    private int newPoint(int point) {
+    private int setNewPoint(int point) {
         return switch (point) {
             case ZERO_POINT -> FIRST_POINT;
             case FIRST_POINT -> SECOND_POINT;
@@ -126,45 +129,54 @@ public class MatchScoreCalculationService {
     }
 
     private void dropPoint() {
-        matchScoreDTO.setPoint1(ZERO_POINT);
-        matchScoreDTO.setPoint2(ZERO_POINT);
+        MATCH_SCORE.setPoint1(ZERO_POINT);
+        MATCH_SCORE.setPoint2(ZERO_POINT);
     }
 
     private boolean isAddGame() {
         if (player == 1) {
-            return matchScoreDTO.getPoint1() == ZERO_POINT;
+            return MATCH_SCORE.getPoint1() == ZERO_POINT;
         } else {
-            return matchScoreDTO.getPoint2() == ZERO_POINT;
+            return MATCH_SCORE.getPoint2() == ZERO_POINT;
         }
     }
 
     private void addGame() {
         if (player == 1) {
-            matchScoreDTO.setGame1(matchScoreDTO.getGame1() + 1);
+            MATCH_SCORE.setGame1(MATCH_SCORE.getGame1() + 1);
         } else {
-            matchScoreDTO.setGame2(matchScoreDTO.getGame2() + 1);
+            MATCH_SCORE.setGame2(MATCH_SCORE.getGame2() + 1);
         }
     }
 
     private void dropGame() {
-        matchScoreDTO.setGame1(0);
-        matchScoreDTO.setGame2(0);
+        MATCH_SCORE.setGame1(0);
+        MATCH_SCORE.setGame2(0);
     }
 
     private boolean isAddSet() {
-        return ((matchScoreDTO.getGame1() >= MAX_GAME || matchScoreDTO.getGame2() >= MAX_GAME) &&
-                abs(matchScoreDTO.getGame1() - matchScoreDTO.getGame2()) >= DIFFERENCE);
+        return ((MATCH_SCORE.getGame1() >= MAX_GAME || MATCH_SCORE.getGame2() >= MAX_GAME) &&
+                abs(MATCH_SCORE.getGame1() - MATCH_SCORE.getGame2()) >= DIFFERENCE);
     }
 
     private void addSet() {
         if (player == 1) {
-            matchScoreDTO.setSet1(matchScoreDTO.getSet1() + 1);
+            MATCH_SCORE.setSet1(MATCH_SCORE.getSet1() + 1);
         } else {
-            matchScoreDTO.setSet2(matchScoreDTO.getSet2() + 1);
+            MATCH_SCORE.setSet2(MATCH_SCORE.getSet2() + 1);
         }
     }
 
     private boolean isFinished() {
-        return (matchScoreDTO.getSet1() >= MAX_SET) || (matchScoreDTO.getSet2() >= MAX_SET);
+        return (MATCH_SCORE.getSet1() >= MAX_SET) || (MATCH_SCORE.getSet2() >= MAX_SET);
+    }
+
+    private void finishMatch() {
+        if (MATCH_SCORE.getSet1() == 2) {
+            MATCH_SCORE.setWinner(MATCH_SCORE.getPlayerName1());
+        } else {
+            MATCH_SCORE.setWinner(MATCH_SCORE.getPlayerName2());
+        }
+        MATCH_SCORE.setFinished(true);
     }
 }

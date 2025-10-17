@@ -1,6 +1,6 @@
 package TennisScoreboard.controller.servlet;
 
-import TennisScoreboard.entity.MatchScoreDTO;
+import TennisScoreboard.dto.MatchScoreDTO;
 import TennisScoreboard.exception.InputException;
 import TennisScoreboard.exception.UrlException;
 import TennisScoreboard.sevice.FinishedMatchesPersistenceService;
@@ -39,7 +39,7 @@ public class MatchScoreServlet extends HttpServlet {
             finishedMatchesPersistenceService.persist(matchScoreDTO);
             response.sendRedirect(request.getContextPath() + "/matches");
         } else {
-            new MatchScoreCalculationService(matchScoreDTO, player).calculate();
+            new MatchScoreCalculationService(matchScoreDTO).newPointForPlayer(player);
             forwardToScorePage(request, response, matchScoreDTO);
         }
     }

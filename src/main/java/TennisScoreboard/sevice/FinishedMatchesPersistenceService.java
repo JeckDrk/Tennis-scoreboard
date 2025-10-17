@@ -1,17 +1,16 @@
 package TennisScoreboard.sevice;
 
-import TennisScoreboard.entity.MatchEntity;
-import TennisScoreboard.entity.MatchScoreDTO;
-import TennisScoreboard.entity.PlayerEntity;
-import TennisScoreboard.model.MatchesStorage;
-import TennisScoreboard.model.PlayerStorage;
+import TennisScoreboard.model.MatchEntity;
+import TennisScoreboard.dto.MatchScoreDTO;
+import TennisScoreboard.model.PlayerEntity;
+import TennisScoreboard.dao.PersistenceStorage;
 
 public class FinishedMatchesPersistenceService {
 
-    private final MatchesStorage matchStorage;
-    private final PlayerStorage playerStorage;
+    private final PersistenceStorage<MatchEntity> matchStorage;
+    private final PersistenceStorage<PlayerEntity> playerStorage;
 
-    public FinishedMatchesPersistenceService(MatchesStorage matchStorage, PlayerStorage playerStorage) {
+    public FinishedMatchesPersistenceService(PersistenceStorage<MatchEntity> matchStorage, PersistenceStorage<PlayerEntity> playerStorage) {
         this.matchStorage = matchStorage;
         this.playerStorage = playerStorage;
     }

@@ -1,4 +1,4 @@
-package TennisScoreboard.entity;
+package TennisScoreboard.model;
 
 
 import jakarta.persistence.*;

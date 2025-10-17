@@ -1,6 +1,6 @@
 package TennisScoreboard.sevice;
 
-import TennisScoreboard.entity.MatchScoreDTO;
+import TennisScoreboard.dto.MatchScoreDTO;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,8 +1,8 @@
 package TennisScoreboard.sevice;
 
-import TennisScoreboard.entity.MatchEntity;
-import TennisScoreboard.entity.SearchDTO;
-import TennisScoreboard.model.MatchesStorage;
+import TennisScoreboard.dao.PaginatedSearchStorage;
+import TennisScoreboard.model.MatchEntity;
+import TennisScoreboard.dto.SearchDTO;
 
 import java.util.List;
 
@@ -10,9 +10,9 @@ import java.util.List;
 
 public class SearchForNameService {
 
-    private final MatchesStorage matchStorage;
+    private final PaginatedSearchStorage<MatchEntity> matchStorage;
 
-    public SearchForNameService(MatchesStorage matchStorage) {
+    public SearchForNameService(PaginatedSearchStorage<MatchEntity> matchStorage) {
         this.matchStorage = matchStorage;
     }
 

@@ -1,6 +1,6 @@
 <%@ page import="TennisScoreboard.sevice.OngoingMatchesService" %>
-<%@ page import="TennisScoreboard.entity.MatchScoreDTO" %>
-<%@ page import="TennisScoreboard.entity.PlayerEntity" %>
+<%@ page import="TennisScoreboard.dto.MatchScoreDTO" %>
+<%@ page import="TennisScoreboard.model.PlayerEntity" %>
 <%@ page import="java.util.UUID" %>
 <html>
 <head>

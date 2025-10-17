@@ -1,11 +1,9 @@
 package TennisScoreboard.controller.servlet;
 
-import TennisScoreboard.model.MatchScorePersistence;
-import TennisScoreboard.model.PlayerPersistence;
-import TennisScoreboard.model.PlayerStorage;
-import TennisScoreboard.model.MatchesStorage;
+import TennisScoreboard.dao.*;
+import TennisScoreboard.model.PlayerEntity;
 import TennisScoreboard.sevice.*;
-import TennisScoreboard.util.utilPersistence;
+import TennisScoreboard.util.SessionFactory;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
@@ -17,8 +15,8 @@ public class Listener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         ServletContext context = sce.getServletContext();
 
-        PlayerStorage playerStorage = new PlayerPersistence();
-        MatchesStorage matchStorage = new MatchScorePersistence();
+        PersistenceStorage<PlayerEntity> playerStorage = new PlayerPersistence();
+        MatchScorePersistence matchStorage = new MatchScorePersistence();
         PrepareMatchScore prepareMatchScore = new PrepareMatchScore(playerStorage);
         OngoingMatchesService ongoingMatchesService = new OngoingMatchesService();
         FinishedMatchesPersistenceService finishedMatchesPersistenceService = new FinishedMatchesPersistenceService(matchStorage, playerStorage);
@@ -36,7 +34,7 @@ public class Listener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        utilPersistence.getSessionFactory().close();
+        SessionFactory.getSessionFactory().close();
         ServletContextListener.super.contextDestroyed(sce);
     }
 }

@@ -1,4 +1,4 @@
-package TennisScoreboard.entity;
+package TennisScoreboard.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
