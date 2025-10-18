@@ -31,7 +31,6 @@ public class NewMatchServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String name1 = request.getParameter("namePlayer1");
         String name2 = request.getParameter("namePlayer2");
-
         try {
             InputValidator.namesValidator(name1, name2);
         } catch (InputException e) {
@@ -39,11 +38,8 @@ public class NewMatchServlet extends HttpServlet {
             doGet(request, response);
             return;
         }
-
         MatchScoreDTO matchScoreDTO = prepareMatchScore.prepareMatchScore(name1, name2);
-
         UUID uuid = ongoingMatchesService.addMatch(matchScoreDTO);
-
         response.sendRedirect(request.getContextPath() + "/match-score?uuid=" + uuid);
     }
 

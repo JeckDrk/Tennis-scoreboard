@@ -2,7 +2,7 @@ package TennisScoreboard.controller.servlet;
 
 import TennisScoreboard.dto.MatchScoreDTO;
 import TennisScoreboard.exception.InputException;
-import TennisScoreboard.exception.UrlException;
+import TennisScoreboard.exception.NotFoundException;
 import TennisScoreboard.sevice.FinishedMatchesPersistenceService;
 import TennisScoreboard.sevice.MatchScoreCalculationService;
 import TennisScoreboard.sevice.OngoingMatchesService;
@@ -32,33 +32,23 @@ public class MatchScoreServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         UUID uuid = extractUuidFromRequest(request);
-        MatchScoreDTO matchScoreDTO = getMatchScoreByUUID(uuid);
-        int player = Integer.parseInt(request.getParameter("player"));
-
+        MatchScoreDTO matchScoreDTO = ongoingMatchesService.getMatch(uuid);
         if (matchScoreDTO.isFinished()) {
             finishedMatchesPersistenceService.persist(matchScoreDTO);
             ongoingMatchesService.removeMatch(uuid);
             response.sendRedirect(request.getContextPath() + "/matches");
         } else {
+            int player = Integer.parseInt(request.getParameter("player"));
             new MatchScoreCalculationService(matchScoreDTO).newPointForPlayer(player);
-            forwardToScorePage(request, response, matchScoreDTO);
+            forwardToPage(request, response, matchScoreDTO);
         }
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         UUID uuid = extractUuidFromRequest(request);
-        MatchScoreDTO matchScoreDTO = getMatchScoreByUUID(uuid);
-        forwardToScorePage(request, response, matchScoreDTO);
-    }
-
-    private MatchScoreDTO getMatchScoreByUUID(UUID uuid) {
         MatchScoreDTO matchScoreDTO = ongoingMatchesService.getMatch(uuid);
-
-        if (matchScoreDTO == null) {
-            throw new UrlException();
-        }
-        return matchScoreDTO;
+        forwardToPage(request, response, matchScoreDTO);
     }
 
     private UUID extractUuidFromRequest(HttpServletRequest request) {
@@ -66,12 +56,12 @@ public class MatchScoreServlet extends HttpServlet {
         try {
             return Mapper.mapUUID(uuidBuffer);
         } catch (InputException e) {
-            throw new UrlException();
+            throw new NotFoundException();
         }
     }
 
-    private void forwardToScorePage(HttpServletRequest request, HttpServletResponse response,
-                                    MatchScoreDTO matchScoreDTO) throws ServletException, IOException {
+    private void forwardToPage(HttpServletRequest request, HttpServletResponse response,
+                               MatchScoreDTO matchScoreDTO) throws ServletException, IOException {
         UUID uuid = extractUuidFromRequest(request);
         request.setAttribute("uuid", uuid);
         request.setAttribute("matchScoreDTO", matchScoreDTO);

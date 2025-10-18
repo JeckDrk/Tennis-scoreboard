@@ -1,7 +1,7 @@
 package TennisScoreboard.config;
 
 import TennisScoreboard.exception.ApplicationException;
-import TennisScoreboard.exception.UrlException;
+import TennisScoreboard.exception.NotFoundException;
 import jakarta.servlet.*;
 import jakarta.servlet.Filter;
 import jakarta.servlet.annotation.WebFilter;
@@ -26,7 +26,7 @@ public class ErrorFilter implements jakarta.servlet.Filter {
         servletResponse.setCharacterEncoding("UTF-8");
         try {
             filterChain.doFilter(servletRequest, servletResponse);
-        }catch (UrlException e){
+        }catch (NotFoundException e){
             response.sendRedirect(request.getContextPath() + "/new-match");
         } catch (ApplicationException e) {
             throw new ApplicationException(e.getMessage());

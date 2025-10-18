@@ -1,6 +1,7 @@
 package TennisScoreboard.sevice;
 
 import TennisScoreboard.dto.MatchScoreDTO;
+import TennisScoreboard.exception.NotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +11,11 @@ public class OngoingMatchesService {
     private final Map<UUID, MatchScoreDTO> MATCH_SCORES = new HashMap<>();
 
     public MatchScoreDTO getMatch(UUID id) {
-        return MATCH_SCORES.get(id);
+        MatchScoreDTO matchScoreDTO = MATCH_SCORES.get(id);
+        if (matchScoreDTO == null) {
+            throw new NotFoundException();
+        }
+        return matchScoreDTO;
     }
 
     public UUID addMatch(MatchScoreDTO matchScoreDTO) {
