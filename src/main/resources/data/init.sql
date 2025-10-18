@@ -1,13 +1,13 @@
-INSERT into Players (name) values ('L. KIVIC');
-INSERT into Players (name) values ('K. LAMPOT');
-INSERT into Players (name) values ('J. PORROT');
-INSERT into Players (name) values ('G. GRIMBER');
-INSERT into Players (name) values ('K. KUBERT');
-INSERT into Players (name) values ('S. SAFIN');
-INSERT into Players (name) values ('I. BORG');
-INSERT into Players (name) values ('O. PORIS');
-INSERT into Players (name) values ('A. GETIRM');
-INSERT into Players (name) values ('S. POKOR');
+INSERT into Players (name) values ('Василий');
+INSERT into Players (name) values ('Иван');
+INSERT into Players (name) values ('Андрей');
+INSERT into Players (name) values ('Даниил');
+INSERT into Players (name) values ('Олег');
+INSERT into Players (name) values ('Артём');
+INSERT into Players (name) values ('Никита');
+INSERT into Players (name) values ('Илья');
+INSERT into Players (name) values ('Глеб');
+INSERT into Players (name) values ('Виталий');
 
 INSERT into Matches (player1, player2, winner) values (1, 10, 10);
 INSERT into Matches (player1, player2, winner) values (2, 9, 2);

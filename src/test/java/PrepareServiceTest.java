@@ -27,7 +27,6 @@ public class PrepareServiceTest {
     private final String NAME1 = "testName1";
     private final String NAME2 = "testName2";
 
-
     private Set<PlayerEntity> playersTestStorage;
 
     private TestDAOPersistence testDAOPlayer;
