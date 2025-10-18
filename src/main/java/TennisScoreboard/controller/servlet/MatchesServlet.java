@@ -2,7 +2,6 @@ package TennisScoreboard.controller.servlet;
 
 import TennisScoreboard.model.MatchEntity;
 import TennisScoreboard.dto.SearchDTO;
-import TennisScoreboard.sevice.PagesMatchesService;
 import TennisScoreboard.sevice.SearchForNameService;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -19,36 +18,32 @@ public class MatchesServlet extends HttpServlet {
 
     private static final int PAGE_SIZE = 4;
 
-    PagesMatchesService pagesMatchesService;
     SearchForNameService searchForNameService;
 
     @Override
-    public void init(ServletConfig config) throws ServletException {
-        pagesMatchesService = (PagesMatchesService) config.getServletContext().getAttribute("pagesMatchesService");
+    public void init(ServletConfig config) {
         searchForNameService = (SearchForNameService) config.getServletContext().getAttribute("searchForNameService");
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String name = request.getParameter("filter_by_player_name");
-        processSearchPage(request, response, name);
+        processSearchPage(request, response);
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String name = request.getParameter("filter_by_player_name");
-        if (name != null && !name.isEmpty()) {
-            processSearchPage(request, response, name);
-        } else {
-            processDefaultPage(request, response);
-        }
+
+        processSearchPage(request, response);
     }
 
-    private void processSearchPage(HttpServletRequest request, HttpServletResponse response, String name)
+    private void processSearchPage(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int page = Integer.parseInt(request.getParameter("page") == null ? "1" : request.getParameter("page"));
+        String name = request.getParameter("filter_by_player_name") == null ? "" : request.getParameter("filter_by_player_name");
 
         SearchDTO searchDTO = new SearchDTO(page, PAGE_SIZE, name);
 
@@ -56,18 +51,6 @@ public class MatchesServlet extends HttpServlet {
         long totalPages = searchForNameService.getPagesCountOfSearch(searchDTO);
 
         forwardToPage(request, response, matches, totalPages, page, name);
-    }
-
-    private void processDefaultPage(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        int page = Integer.parseInt(request.getParameter("page") == null ? "1" : request.getParameter("page"));
-
-        SearchDTO searchDTO = new SearchDTO(page, PAGE_SIZE);
-
-        List<MatchEntity> matches = pagesMatchesService.getMatchesFromPage(searchDTO);
-        long totalPages = pagesMatchesService.getPagesCount(searchDTO);
-
-        forwardToPage(request, response, matches, totalPages, page, "");
     }
     
     private void forwardToPage(HttpServletRequest request, HttpServletResponse response, List<MatchEntity> matches,
@@ -78,7 +61,6 @@ public class MatchesServlet extends HttpServlet {
         if (!name.isEmpty()) {
             request.setAttribute("filter_by_player_name", name);
         }
-
         request.getRequestDispatcher("/WEB-INF/view/matches.jsp").forward(request, response);
     }
     

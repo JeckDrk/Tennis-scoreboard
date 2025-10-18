@@ -1,7 +1,7 @@
-package TennisScoreboard.controller.servlet;
+package TennisScoreboard.config;
 
 import TennisScoreboard.exception.ApplicationException;
-import TennisScoreboard.exception.InputException;
+import TennisScoreboard.exception.UrlException;
 import jakarta.servlet.*;
 import jakarta.servlet.Filter;
 import jakarta.servlet.annotation.WebFilter;
@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebFilter(urlPatterns = {"/currencies", "/currency/*", "/exchangeRate/*", "/exchangeRates", "/exchange"})
+@WebFilter(urlPatterns = "/*")
 public class ErrorFilter implements jakarta.servlet.Filter {
 
     @Override
@@ -22,11 +22,14 @@ public class ErrorFilter implements jakarta.servlet.Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-
+        servletRequest.setCharacterEncoding("UTF-8");
+        servletResponse.setCharacterEncoding("UTF-8");
         try {
             filterChain.doFilter(servletRequest, servletResponse);
+        }catch (UrlException e){
+            response.sendRedirect(request.getContextPath() + "/new-match");
         } catch (ApplicationException e) {
-            response.sendRedirect(request.getContextPath() + "/");
+            throw new ApplicationException(e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -1,4 +1,4 @@
-package TennisScoreboard.controller.servlet;
+package TennisScoreboard.config;
 
 import TennisScoreboard.dao.*;
 import TennisScoreboard.model.PlayerEntity;
@@ -9,7 +9,7 @@ import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 
-@WebListener("/*")
+@WebListener
 public class Listener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
@@ -20,7 +20,6 @@ public class Listener implements ServletContextListener {
         PrepareMatchScore prepareMatchScore = new PrepareMatchScore(playerStorage);
         OngoingMatchesService ongoingMatchesService = new OngoingMatchesService();
         FinishedMatchesPersistenceService finishedMatchesPersistenceService = new FinishedMatchesPersistenceService(matchStorage, playerStorage);
-        PagesMatchesService pagesMatchesService = new PagesMatchesService(matchStorage);
         SearchForNameService searchForNameService = new SearchForNameService(matchStorage);
 
         context.setAttribute("playerStorage", playerStorage);
@@ -28,7 +27,6 @@ public class Listener implements ServletContextListener {
         context.setAttribute("prepareMatchScore", prepareMatchScore);
         context.setAttribute("ongoingMatchesService", ongoingMatchesService);
         context.setAttribute("finishedMatchesPersistenceService", finishedMatchesPersistenceService);
-        context.setAttribute("pagesMatchesService", pagesMatchesService);
         context.setAttribute("searchForNameService", searchForNameService);
     }
 

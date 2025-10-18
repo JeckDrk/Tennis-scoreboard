@@ -1,6 +1,7 @@
 package TennisScoreboard.dao;
 
 import TennisScoreboard.exception.ApplicationException;
+import TennisScoreboard.exception.StorageException;
 import TennisScoreboard.model.MatchEntity;
 import TennisScoreboard.exception.UniqueException;
 import TennisScoreboard.util.SessionFactory;
@@ -15,32 +16,7 @@ public class MatchScorePersistence implements PersistenceStorage<MatchEntity>, P
     protected static final org.hibernate.SessionFactory SESSION_FACTORY = SessionFactory.getSessionFactory();
 
     @Override
-    public List<MatchEntity> getPaginated(int page, int pageSize) {
-        try (Session session = SESSION_FACTORY.openSession()) {
-            int firstEntityOnPage = 1 + (page - 1) * pageSize;
-            int lastEntityOnPage = page * pageSize;
-            session.beginTransaction();
-            return session.createQuery("from MatchEntity m where m.id >= :first and m.id <= :last order by m.id ASC", MatchEntity.class)
-                    .setParameter("first", firstEntityOnPage)
-                    .setParameter("last", lastEntityOnPage)
-                    .getResultList();
-        } catch (HibernateException e) {
-            throw new ApplicationException(e.getMessage());
-        }
-    }
-
-    @Override
-    public long getEntityCount() {
-        try (Session session = SESSION_FACTORY.openSession()) {
-            session.beginTransaction();
-            return session.createQuery("select count(m) from MatchEntity m", long.class).uniqueResult();
-        } catch (HibernateException e) {
-            throw new ApplicationException(e.getMessage());
-        }
-    }
-
-    @Override
-    public List<MatchEntity> getPaginatedForSearch(int page, int pageSize, String search) {
+    public List<MatchEntity> getPaginated(int page, int pageSize, String search) {
         try (Session session = SESSION_FACTORY.openSession()) {
             int firstEntityOnPage = (page - 1) * pageSize;
             session.beginTransaction();
@@ -52,12 +28,12 @@ public class MatchScorePersistence implements PersistenceStorage<MatchEntity>, P
                     .setMaxResults(pageSize)
                     .getResultList();
         } catch (HibernateException e) {
-            throw new ApplicationException(e.getMessage());
+            throw new StorageException(e.getMessage());
         }
     }
 
     @Override
-    public long getEntityCountForSearch(String search) {
+    public long getEntityCount(String search) {
         try (Session session = SESSION_FACTORY.openSession()) {
             session.beginTransaction();
             return session.createQuery("select count(m) from MatchEntity m where " +
@@ -65,7 +41,7 @@ public class MatchScorePersistence implements PersistenceStorage<MatchEntity>, P
                     .setParameter("search", "%" + search.toLowerCase() + "%")
                     .uniqueResult();
         } catch (HibernateException e) {
-            throw new ApplicationException(e.getMessage());
+            throw new StorageException(e.getMessage());
         }
     }
 
@@ -82,7 +58,7 @@ public class MatchScorePersistence implements PersistenceStorage<MatchEntity>, P
                 throw new UniqueException("Match already exists!");
             }
         } catch (HibernateException e) {
-            throw new ApplicationException(e.getMessage());
+            throw new StorageException(e.getMessage());
         }
     }
 
@@ -93,7 +69,7 @@ public class MatchScorePersistence implements PersistenceStorage<MatchEntity>, P
             session.beginTransaction();
             return session.getReference(MatchEntity.class, id);
         } catch (HibernateException e) {
-            throw new ApplicationException(e.getMessage());
+            throw new StorageException(e.getMessage());
         }
     }
 }

@@ -37,6 +37,7 @@ public class MatchScoreServlet extends HttpServlet {
 
         if (matchScoreDTO.isFinished()) {
             finishedMatchesPersistenceService.persist(matchScoreDTO);
+            ongoingMatchesService.removeMatch(uuid);
             response.sendRedirect(request.getContextPath() + "/matches");
         } else {
             new MatchScoreCalculationService(matchScoreDTO).newPointForPlayer(player);

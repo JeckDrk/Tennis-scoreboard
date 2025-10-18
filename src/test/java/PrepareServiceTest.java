@@ -5,8 +5,7 @@ import TennisScoreboard.sevice.PrepareMatchScore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,12 +14,8 @@ public class PrepareServiceTest {
     class TestDAOPersistence implements PersistenceStorage<PlayerEntity> {
         @Override
         public PlayerEntity get(Object name) {
-            for (PlayerEntity playerEntity : playersTestStorage) {
-                if (playerEntity.getName().equals(name)) {
-                    return playerEntity;
-                }
-            }
-            return null;
+            Optional<PlayerEntity> player = playersTestStorage.stream().filter(p -> p.getName().equals(name)).findFirst();
+            return player.orElse(null);
         }
 
         @Override
@@ -33,14 +28,14 @@ public class PrepareServiceTest {
     private final String NAME2 = "testName2";
 
 
-    private List<PlayerEntity> playersTestStorage;
+    private Set<PlayerEntity> playersTestStorage;
 
     private TestDAOPersistence testDAOPlayer;
     private PrepareMatchScore prepareMatchScore;
 
     @BeforeEach
     void setUp() {
-        playersTestStorage = new ArrayList<>();
+        playersTestStorage = new LinkedHashSet<>();
         testDAOPlayer = new TestDAOPersistence();
         prepareMatchScore = new PrepareMatchScore(testDAOPlayer);
     }

@@ -1,8 +1,10 @@
 package TennisScoreboard.dao;
 
 
+import TennisScoreboard.exception.StorageException;
 import TennisScoreboard.model.PlayerEntity;
 import TennisScoreboard.exception.UniqueException;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import TennisScoreboard.util.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
@@ -20,8 +22,8 @@ public class PlayerPersistence implements PersistenceStorage<PlayerEntity> {
                     .uniqueResult();
             session.getTransaction().commit();
             return player;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (HibernateException e) {
+            throw new StorageException(e.getMessage());
         }
     }
 
@@ -38,8 +40,8 @@ public class PlayerPersistence implements PersistenceStorage<PlayerEntity> {
             if ("PUBLIC.CONSTRAINT_INDEX_D".equals(e.getConstraintName())) {
                 throw new UniqueException("Player already exists");
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (HibernateException e) {
+            throw new StorageException(e.getMessage());
         }
     }
 }

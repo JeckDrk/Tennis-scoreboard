@@ -17,12 +17,11 @@ public class SearchForNameService {
     }
 
     public List<MatchEntity> getMatchesFromPageOfSearch(SearchDTO searchDTO) {
-        return matchStorage.getPaginatedForSearch(searchDTO.getPage(), searchDTO.getSize(), searchDTO.getSearch());
+        return matchStorage.getPaginated(searchDTO.getPage(), searchDTO.getSize(), searchDTO.getSearch());
     }
 
-
     public long getPagesCountOfSearch(SearchDTO searchDTO) {
-        long entityCount = matchStorage.getEntityCountForSearch(searchDTO.getSearch());
+        long entityCount = matchStorage.getEntityCount(searchDTO.getSearch());
         long pageCount = entityCount / searchDTO.getSize();
 
         return entityCount % searchDTO.getSize() == 0 ? pageCount : pageCount + 1;

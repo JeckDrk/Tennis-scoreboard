@@ -28,8 +28,8 @@
         </div>
         <div>
             <nav class="nav-links">
-                <a class="nav-link" href="/Tennis-scoreboard">Home</a>
-                <a class="nav-link" href="matches">Matches</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}">Home</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/matches">Matches</a>
             </nav>
         </div>
     </section>
@@ -70,7 +70,7 @@
                         </c:choose>
                     </td>
                     <td class="table-text">
-                        <form method="post" action="match-score?uuid=${uuid}">
+                        <form method="post" action="${pageContext.request.contextPath}/match-score?uuid=${uuid}">
                             <input type="hidden" name="player" value="1">
                             <input class="score-btn" type="submit" value="Score">
                         </form>
@@ -97,7 +97,7 @@
                         </c:choose>
                     </td>
                     <td class="table-text">
-                        <form method="post" action="match-score?uuid=${uuid}">
+                        <form method="post" action="${pageContext.request.contextPath}/match-score?uuid=${uuid}">
                             <input type="hidden" name="player" value="2">
                             <input class="score-btn" type="submit" value="Score">
                         </form>
@@ -110,7 +110,8 @@
 </main>
 <footer>
     <div class="footer">
-        <p>&copy; Tennis Scoreboard, project from <a href="https://zhukovsd.github.io/java-backend-learning-course/">zhukovsd/java-backend-learning-course</a>
+        <p>&copy; Tennis Scoreboard, project created @jeckdrk from <a
+                href="https://zhukovsd.github.io/java-backend-learning-course/">zhukovsd/java-backend-learning-course</a>
             roadmap.</p>
     </div>
 </footer>

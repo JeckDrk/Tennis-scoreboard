@@ -22,8 +22,8 @@
         </div>
         <div>
             <nav class="nav-links">
-                <a class="nav-link" href="/Tennis-scoreboard">Home</a>
-                <a class="nav-link" href="matches">Matches</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}">Home</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/matches">Matches</a>
             </nav>
         </div>
     </section>
@@ -34,12 +34,12 @@
         <p>Manage your tennis matches, record results, and track rankings</p>
         <div class="welcome-image"></div>
         <div class="form-container center">
-            <a class="homepage-action-button" href="new-match">
+            <a class="homepage-action-button" href="${pageContext.request.contextPath}/new-match">
                 <button class="btn start-match">
                     Start a new match
                 </button>
             </a>
-            <a class="homepage-action-button" href="matches">
+            <a class="homepage-action-button" href="${pageContext.request.contextPath}/matches">
                 <button class="btn view-results">
                     View match results
                 </button>
@@ -49,7 +49,9 @@
 </main>
 <footer>
     <div class="footer">
-        <p>&copy; Tennis Scoreboard, project from <a href="https://zhukovsd.github.io/java-backend-learning-course/">zhukovsd/java-backend-learning-course</a> roadmap.</p>
+        <p>&copy; Tennis Scoreboard, project created @jeckdrk from <a
+                href="https://zhukovsd.github.io/java-backend-learning-course/">zhukovsd/java-backend-learning-course</a>
+            roadmap.</p>
     </div>
 </footer>
 </body>

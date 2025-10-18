@@ -21,4 +21,8 @@ public class OngoingMatchesService {
 
         return id;
     }
+
+    public void removeMatch(UUID id) {
+        MATCH_SCORES.remove(id);
+    }
 }
