@@ -15,7 +15,7 @@ public class FinishedMatchesPersistenceService {
         this.playerStorage = playerStorage;
     }
 
-    public void persist(MatchScoreDTO matchScoreDTO) {
+    public void saveMatch(MatchScoreDTO matchScoreDTO) {
         PlayerEntity player1 = playerStorage.get(matchScoreDTO.getPlayerName1());
         PlayerEntity player2 = playerStorage.get(matchScoreDTO.getPlayerName2());
 

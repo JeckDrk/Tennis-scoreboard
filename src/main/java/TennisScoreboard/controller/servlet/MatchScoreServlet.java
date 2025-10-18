@@ -4,6 +4,7 @@ import TennisScoreboard.dto.MatchScoreDTO;
 import TennisScoreboard.exception.InputException;
 import TennisScoreboard.exception.NotFoundException;
 import TennisScoreboard.sevice.FinishedMatchesPersistenceService;
+import TennisScoreboard.sevice.MatchLifecycleManager;
 import TennisScoreboard.sevice.MatchScoreCalculationService;
 import TennisScoreboard.sevice.OngoingMatchesService;
 import TennisScoreboard.util.Mapper;
@@ -20,35 +21,31 @@ import java.util.UUID;
 @WebServlet(urlPatterns = "/match-score")
 public class MatchScoreServlet extends HttpServlet {
 
-    OngoingMatchesService ongoingMatchesService;
-    FinishedMatchesPersistenceService finishedMatchesPersistenceService;
+    private MatchLifecycleManager matchLifecycleManager;
 
     @Override
     public void init(ServletConfig config) {
-        ongoingMatchesService = (OngoingMatchesService) config.getServletContext().getAttribute("ongoingMatchesService");
-        finishedMatchesPersistenceService = (FinishedMatchesPersistenceService) config.getServletContext().getAttribute("finishedMatchesPersistenceService");
+        matchLifecycleManager = (MatchLifecycleManager) config.getServletContext().getAttribute("matchLifecycleManager");
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         UUID uuid = extractUuidFromRequest(request);
-        MatchScoreDTO matchScoreDTO = ongoingMatchesService.getMatch(uuid);
-        if (matchScoreDTO.isFinished()) {
-            finishedMatchesPersistenceService.persist(matchScoreDTO);
-            ongoingMatchesService.removeMatch(uuid);
+        int player = Integer.parseInt(request.getParameter("player"));
+
+        if (matchLifecycleManager.isMatchFinished(uuid)) {
             response.sendRedirect(request.getContextPath() + "/matches");
         } else {
-            int player = Integer.parseInt(request.getParameter("player"));
-            new MatchScoreCalculationService(matchScoreDTO).newPointForPlayer(player);
-            forwardToPage(request, response, matchScoreDTO);
+            MatchScoreDTO matchScoreDTO = matchLifecycleManager.updateMatchScore(uuid, player);
+            forwardToPage(request, response, matchScoreDTO, uuid);
         }
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         UUID uuid = extractUuidFromRequest(request);
-        MatchScoreDTO matchScoreDTO = ongoingMatchesService.getMatch(uuid);
-        forwardToPage(request, response, matchScoreDTO);
+        MatchScoreDTO matchScoreDTO = matchLifecycleManager.getMatch(uuid);
+        forwardToPage(request, response, matchScoreDTO, uuid);
     }
 
     private UUID extractUuidFromRequest(HttpServletRequest request) {
@@ -61,8 +58,7 @@ public class MatchScoreServlet extends HttpServlet {
     }
 
     private void forwardToPage(HttpServletRequest request, HttpServletResponse response,
-                               MatchScoreDTO matchScoreDTO) throws ServletException, IOException {
-        UUID uuid = extractUuidFromRequest(request);
+                               MatchScoreDTO matchScoreDTO, UUID uuid) throws ServletException, IOException {
         request.setAttribute("uuid", uuid);
         request.setAttribute("matchScoreDTO", matchScoreDTO);
         request.getRequestDispatcher("/WEB-INF/view/match-score.jsp").forward(request, response);

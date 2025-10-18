@@ -20,13 +20,11 @@ public class Listener implements ServletContextListener {
         PrepareMatchScore prepareMatchScore = new PrepareMatchScore(playerStorage);
         OngoingMatchesService ongoingMatchesService = new OngoingMatchesService();
         FinishedMatchesPersistenceService finishedMatchesPersistenceService = new FinishedMatchesPersistenceService(matchStorage, playerStorage);
+        MatchLifecycleManager matchLifecycleManager = new MatchLifecycleManager(ongoingMatchesService, finishedMatchesPersistenceService);
         SearchForNameService searchForNameService = new SearchForNameService(matchStorage);
 
-        context.setAttribute("playerStorage", playerStorage);
-        context.setAttribute("matchStorage", matchStorage);
         context.setAttribute("prepareMatchScore", prepareMatchScore);
-        context.setAttribute("ongoingMatchesService", ongoingMatchesService);
-        context.setAttribute("finishedMatchesPersistenceService", finishedMatchesPersistenceService);
+        context.setAttribute("matchLifecycleManagerService", matchLifecycleManager);
         context.setAttribute("searchForNameService", searchForNameService);
     }
 

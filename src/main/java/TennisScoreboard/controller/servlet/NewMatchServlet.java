@@ -2,6 +2,7 @@ package TennisScoreboard.controller.servlet;
 
 import TennisScoreboard.dto.MatchScoreDTO;
 import TennisScoreboard.exception.InputException;
+import TennisScoreboard.sevice.MatchLifecycleManager;
 import TennisScoreboard.sevice.OngoingMatchesService;
 import TennisScoreboard.sevice.PrepareMatchScore;
 import TennisScoreboard.util.InputValidator;
@@ -19,12 +20,12 @@ import java.util.UUID;
 public class NewMatchServlet extends HttpServlet {
 
     private PrepareMatchScore prepareMatchScore;
-    private OngoingMatchesService ongoingMatchesService;
+    private MatchLifecycleManager matchLifecycleManager;
 
     @Override
     public void init(ServletConfig config) {
         prepareMatchScore = (PrepareMatchScore) config.getServletContext().getAttribute("prepareMatchScore");
-        ongoingMatchesService = (OngoingMatchesService) config.getServletContext().getAttribute("ongoingMatchesService");
+        matchLifecycleManager = (MatchLifecycleManager) config.getServletContext().getAttribute("matchLifecycleManager");
     }
 
     @Override
@@ -33,14 +34,13 @@ public class NewMatchServlet extends HttpServlet {
         String name2 = request.getParameter("namePlayer2");
         try {
             InputValidator.namesValidator(name1, name2);
+            MatchScoreDTO matchScoreDTO = prepareMatchScore.prepareMatchScore(name1, name2);
+            UUID uuid = matchLifecycleManager.createNewMatch(matchScoreDTO);
+            response.sendRedirect(request.getContextPath() + "/match-score?uuid=" + uuid);
         } catch (InputException e) {
             request.setAttribute("error", e.getMessage());
-            doGet(request, response);
-            return;
+            request.getRequestDispatcher("/WEB-INF/view/new-match.jsp").forward(request, response);
         }
-        MatchScoreDTO matchScoreDTO = prepareMatchScore.prepareMatchScore(name1, name2);
-        UUID uuid = ongoingMatchesService.addMatch(matchScoreDTO);
-        response.sendRedirect(request.getContextPath() + "/match-score?uuid=" + uuid);
     }
 
     @Override

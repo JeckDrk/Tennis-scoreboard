@@ -17,12 +17,12 @@ public class PrepareMatchScore {
         try {
             persistenceStorage.put(new PlayerEntity(name1));
         } catch (UniqueException ignored) {
-            // Сохранилось - хорошо, нет - да и ... всё равно
+            // Сохранилось - хорошо, нет - да и всё равно
         }
         try {
             persistenceStorage.put(new PlayerEntity(name2));
         } catch (UniqueException ignored) {
-            // Сохранилось - хорошо, нет - да и ... всё равно
+            // Сохранилось - хорошо, нет - да и всё равно
         }
         return new MatchScoreDTO(name1, name2);
     }
